@@ -1,14 +1,18 @@
 
 # This file keep the function of five beam 
 
-def ss_center_point(x,L,P,E,I):
-    constant = P/(48*E*I)
+def ss_center_point(x, L, P, E, I):
+    if L <= 0:
+        raise ValueError("Beam span must be positive.")
 
-    if x <= L/2:
+    constant = P / (48 * E * I)
+
+    if x <= L / 2:
         y = constant * x * (3 * L**2 - 4 * x**2)
-
-    elif x> L/2:
-        y = constant *( L-x) * (3 * L**2 - 4 * (L-x)**2)
+    else:
+        y = constant * (L - x) * (
+            3 * L**2 - 4 * (L - x)**2
+        )
 
     return y 
 
