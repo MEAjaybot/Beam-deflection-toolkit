@@ -2,17 +2,19 @@ import json
 from beam import ss_center_point, ss_off_center_point, ss_uniform, cantilever_point, cantilever_uniform
 import csv
 import os 
+import numpy as np
 
-filename = "Output.csv"
+filename = "Outputafternumpyarray.csv"
 headers = ["beam_type", "span_m", "load_value",  "max_deflection_m"]
 
 def calculate_deflection(beam_function, L, load, data):
     E = data["E"]
     I = data["I"]
+    np.linspace(0, L, 101)
 
     if beam_function == ss_off_center_point:
         a = data["off_center_fraction"] * L
-        xs = [i * L / 100 for i in range(101)]
+        xs =  np.linspace(0, L, 101)
         deflections = [
             beam_function(x, L, a, load, E, I) for x in xs
         ]
@@ -22,7 +24,7 @@ def calculate_deflection(beam_function, L, load, data):
             beam_function(x, L, load, E, I) for x in xs
         ]
 
-    return max(deflections)
+    return np.max(deflections)
 
 
 
@@ -41,6 +43,8 @@ try:
     for name in data["beam_cases"]:
         beam_function, load_type = beam_functions[name]
 
+
+
         for L in data["spans"]:
             for load in data[load_type]:
                 max_deflection = calculate_deflection(
@@ -54,7 +58,9 @@ try:
                         writer.writerow(headers)
 
 
-                    writer.writerow([f"{name}, {L} m,  {load}, "
+                    writer.writerow([f"{name}", 
+                                     f"{L} m",  
+                                     f"{load}", 
                                      f" {max_deflection*1000:.4f} mm"])
                 # print(
                 #     f"{name}, Span: {L} m, Load: {load}, "
